@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>digital payment · modern suite</title>
+    <!-- font & icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0b0f16;
+            background-image: radial-gradient(circle at 30% 10%, rgba(0, 255, 255, 0.08) 0%, transparent 30%),
+                              radial-gradient(circle at 80% 70%, rgba(0, 180, 255, 0.06) 0%, transparent 35%);
+            font-family: 'Space Grotesk', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            color: #f0fcff;
+        }
+
+        /* main card – glassmorphism + neon border */
+        .neo-card {
+            max-width: 500px;
+            width: 100%;
+            background: rgba(12, 22, 30, 0.75);
+            backdrop-filter: blur(16px) saturate(200%);
+            -webkit-backdrop-filter: blur(16px) saturate(200%);
+            border: 1px solid rgba(64, 255, 255, 0.25);
+            border-radius: 48px;
+            box-shadow: 0 30px 60px -15px #000000, 0 0 0 1px #2affd0 inset, 0 0 35px #00ffff35;
+            padding: 2rem 1.8rem;
+            transition: transform 0.2s ease, border-color 0.2s;
+        }
+
+        .neo-card:hover {
+            border-color: #4ffff0;
+            box-shadow: 0 35px 70px -12px #0ff9, 0 0 0 1.5px #aafff0 inset;
+            transform: scale(1.005);
+        }
+
+        /* header */
+        .pay-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-area {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff, #aafff0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: -0.02em;
+        }
+
+        .badge-live {
+            background: #0d2d36;
+            border-radius: 60px;
+            padding: 0.3rem 1.2rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid #0ff;
+            color: #befffc;
+            box-shadow: 0 0 12px #0ff6;
+        }
+
+        /* qris section — dengan gambar dari link catbox */
+        .qris-preview {
+            background: #0b1e28;
+            border-radius: 36px;
+            padding: 1.8rem 1.5rem;
+            margin: 1.5rem 0 2rem 0;
+            border: 2px solid #20fff090;
+            box-shadow: 0 0 25px #00ffe8, inset 0 0 10px #00ffff1a;
+        }
+
+        .qris-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            color: #c6ffff;
+            font-size: 1.2rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .qris-title i {
+            font-size: 2rem;
+            color: #0ff;
+            filter: drop-shadow(0 0 10px cyan);
+        }
+
+        .qr-image-container {
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 0.8rem;
+            display: inline-block;
+            width: 100%;
+            max-width: 260px;
+            margin: 0 auto 1.2rem;
+            box-shadow: 0 10px 20px #00000080, 0 0 0 3px #0ff;
+        }
+
+        .qr-image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 24px;
+            background: white;
+        }
+
+        .qris-hint {
+            background: #0d2e39;
+            padding: 0.5rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #d0f3ff;
+            border: 1px solid teal;
+        }
+
+        .qris-hint i {
+            color: #0ff;
+        }
+
+        /* e-wallet modern grid */
+        .wallet-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin: 2rem 0 2rem;
+        }
+
+        .wallet-entry {
+            background: linear-gradient(135deg, rgba(16, 44, 52, 0.8), rgba(6, 30, 38, 0.9));
+            border-radius: 100px;
+            padding: 0.8rem 1.5rem 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border: 1px solid #1d7f8c;
+            transition: all 0.25s;
+            box-shadow: 0 8px 0 #051f26;
+        }
+
+        .wallet-entry:hover {
+            border-color: #0ff;
+            background: #13515f;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 0 #051f26, 0 0 25px #0ff;
+        }
+
+        .wallet-icon {
+            width: 56px;
+            height: 56px;
+            background: #10333f;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            color: #0ff;
+            border: 2px solid #2fe5e5;
+            box-shadow: 0 0 15px #0ff;
+        }
+
+        .wallet-info {
+            flex: 1;
+        }
+
+        .wallet-row1 {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 0.3rem;
+        }
+
+        .wallet-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(145deg, #f0ffff, #b4ffff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .wallet-number {
+            font-weight: 600;
+            font-size: 1.1rem;
+            background: #0a2a33;
+            padding: 0.2rem 1rem;
+            border-radius: 40px;
+            border: 1px solid cyan;
+            letter-spacing: 1px;
+            color: white;
+        }
+
+        .wallet-holder {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            font-size: 0.85rem;
+            color: #b2ecf0;
+        }
+
+        .holder-name {
+            background: #05262f;
+            padding: 0.15rem 1.2rem;
+            border-radius: 40px;
+            border: 1px dashed #389caa;
+            font-weight: 500;
+        }
+
+        /* fingerprint / meta */
+        .meta-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 1.8rem;
+            background: #0f2935;
+            padding: 1rem 1.5rem;
+            border-radius: 60px;
+            border: 1px solid #21828f;
+            font-size: 0.8rem;
+        }
+
+        .meta-item i {
+            color: #0ff;
+            width: 24px;
+        }
+
+        .version-chip {
+            background: #03242e;
+            padding: 0.3rem 1rem;
+            border-radius: 40px;
+            font-family: monospace;
+            border: 1px solid cyan;
+        }
+
+        .small-id {
+            color: #87c7d4;
+            display: flex;
+            gap: 1rem;
+            margin: 1rem 0 0.5rem;
+            font-size: 0.7rem;
+        }
+
+        .divider {
+            border-top: 1px dashed #1a6a78;
+            margin: 1.2rem 0 0.5rem;
+        }
+
+        .greet {
+            text-align: center;
+            font-weight: 400;
+            color: #baf2ff;
+            background: #0b2c37a0;
+            padding: 0.6rem;
+            border-radius: 50px;
+            border: 1px solid #1e7f8c;
+            backdrop-filter: blur(4px);
+        }
+
+        .greet i {
+            color: #0ff;
+            margin: 0 5px;
+        }
+
+        /* catatan qris live */
+        .live-qris-note {
+            background: #0b323e;
+            border-radius: 30px;
+            padding: 0.5rem 1.2rem;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .live-qris-note i {
+            color: #0ff;
+        }
+
+        .filename {
+            background: #001e26;
+            border-radius: 30px;
+            padding: 0.1rem 1rem;
+            border: 1px solid cyan;
+            font-family: monospace;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="neo-card">
+        <!-- header modern -->
+        <div class="pay-header">
+            <span class="logo-area"><i class="fas fa-bolt" style="color: #0ff; margin-right: 6px;"></i>PAY</span>
+            <span class="badge-live"><i class="fas fa-circle" style="color: #33ffbb; font-size: 0.6rem;"></i> online • secure</span>
+        </div>
+
+        <!-- QRIS langsung dari link catbox.moe (gambar asli) -->
+        <div class="qris-preview">
+            <div class="qris-title">
+                <i class="fas fa-qrcode"></i> scan & pay <i class="fas fa-qrcode"></i>
+            </div>
+            <!-- gambar QRIS dari https://files.catbox.moe/miot37.jpg -->
+            <div style="text-align: center;">
+                <div class="qr-image-container">
+                    <img src="https://files.catbox.moe/miot37.jpg" alt="QRIS pembayaran" loading="lazy" crossorigin="anonymous">
+                </div>
+            </div>
+            <div class="qris-hint">
+                <i class="fas fa-camera"></i> gunakan kamera / aplikasi QRIS
+                <span class="filename">miot37.jpg</span>
+            </div>
+        </div>
+
+        <!-- e-wallet entries: DANA, GOPAY, OVO sesuai data -->
+        <div class="wallet-list">
+            <!-- DANA -->
+            <div class="wallet-entry">
+                <div class="wallet-icon"><i class="fas fa-wallet"></i></div>
+                <div class="wallet-info">
+                    <div class="wallet-row1">
+                        <span class="wallet-name">DANA</span>
+                        <span class="wallet-number">089677477066</span>
+                    </div>
+                    <div class="wallet-holder">
+                        <i class="fas fa-user-circle"></i> A/N: <span class="holder-name">NULIYAH R******</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- GOPAY -->
+            <div class="wallet-entry">
+                <div class="wallet-icon"><i class="fab fa-google-pay"></i></div>
+                <div class="wallet-info">
+                    <div class="wallet-row1">
+                        <span class="wallet-name">GOPAY</span>
+                        <span class="wallet-number">089677477066</span>
+                    </div>
+                    <div class="wallet-holder">
+                        <i class="fas fa-user-circle"></i> A/N: <span class="holder-name">NULIYAH R******</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OVO -->
+            <div class="wallet-entry">
+                <div class="wallet-icon"><i class="fas fa-bolt"></i></div>
+                <div class="wallet-info">
+                    <div class="wallet-row1">
+                        <span class="wallet-name">OVO</span>
+                        <span class="wallet-number">089677477066</span>
+                    </div>
+                    <div class="wallet-holder">
+                        <i class="fas fa-user-circle"></i> A/N: <span class="holder-name">NULIYAH R******</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- informasi tambahan dengan gaya futuristik -->
+        <div class="live-qris-note">
+            <i class="fas fa-image"></i> <span>QRIS: https://files.catbox.moe/miot37.jpg</span>
+            <span class="filename"><i class="fas fa-check-circle" style="color: #0ff;"></i> live image</span>
+        </div>
+
+        <div class="meta-footer">
+            <span class="meta-item"><i class="fas fa-fingerprint"></i> ID1026485083392</span>
+            <span class="meta-item"><i class="fas fa-print"></i> dicetak: 93600915</span>
+            <span class="version-chip">v1.0.21.02.26</span>
+        </div>
+
+        <!-- baris kode dan A01 -->
+        <div class="small-id">
+            <span><i class="far fa-id-card"></i> A01 · NMD terdaftar</span>
+            <span><i class="far fa-clock"></i> SATU QRIS UNTUK SEMUA</span>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ucapan selamat / tema modern -->
+        <div class="greet">
+            <i class="fas fa-star"></i>  modern payment · fast & private  <i class="fas fa-star"></i>
+        </div>
+
+        <!-- catatan kecil bawah -->
+        <div style="display: flex; justify-content: center; gap: 16px; margin-top: 1rem; font-size: 0.65rem; color: #5299aa;">
+            <span><i class="fas fa-shield-alt"></i> enkripsi ujung ke ujung</span>
+            <span><i class="fas fa-infinity"></i> non‑stop</span>
+        </div>
+    </div>
+</body>
+</html>
